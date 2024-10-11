@@ -2,6 +2,7 @@ package com.emichika.highandlow
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +27,30 @@ class MainActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        // highBtn の要素を取得
+        val highBtn: Button = findViewById(R.id.highBtn)
+        highBtn.setOnClickListener {
+            if ((gameStart && !answered)){
+                highAndLow('h')
+            }
+        }
+
+        // lowBtn の要素を取得
+        val lowBtn: Button = findViewById(R.id.lowBtn)
+        lowBtn.setOnClickListener {
+            if ((gameStart && !answered)){
+                highAndLow('l')
+            }
+        }
+
+        // nextBtn の要素を取得
+        val nextBtn: Button = findViewById(R.id.nextBtn)
+        nextBtn.setOnClickListener {
+            if (gameStart) {
+                drawCard()
+            }
         }
     }
 
@@ -71,5 +96,68 @@ class MainActivity : AppCompatActivity() {
         droidCard = (1..13).random()
         Log.d(tag, "droid:$droidCard")
         answered = false
+    }
+
+    private fun highAndLow(answer:Char) {
+        showDroidCard()
+        answered = true
+        val balance = droidCard - yourCard
+        // hitText の要素を取得
+        val hitText: TextView = findViewById(R.id.hitText)
+        // loseText の要素を取得
+        val loseText: TextView = findViewById(R.id.loseText)
+        // resultText の要素を取得
+        val resultText: TextView = findViewById(R.id.resultText)
+
+        if (balance == 0) {
+            // when even do nothing
+        } else if ((balance > 0 && answer == 'h')) {
+            hitCount++
+            hitText.text = buildString {
+                append(getString(R.string.hit_text))
+                append(hitCount)
+            }
+        } else if ((balance < 0 && answer == 'l')) {
+            hitCount++
+            hitText.text = buildString {
+                append(getString(R.string.hit_text))
+                append(hitCount)
+            }
+        } else {
+            loseCount++
+            loseText.text = buildString {
+                append(getString(R.string.lose_text))
+                append(loseCount)
+            }
+        }
+        if (hitCount == 5) {
+            resultText.text = " あなたの勝ちです "
+            gameStart = false
+        } else if (loseCount == 5) {
+            resultText.text = " あなたの負けです "
+            gameStart = false
+        } else {
+            // do nothing
+        }
+    }
+
+    private fun showDroidCard(){
+        // droidCardImage の要素を取得
+        val droidCardImage: ImageView = findViewById(R.id.droidCardImage)
+        when (droidCard) {
+            1 -> droidCardImage.setImageResource(R.drawable.c01)
+            2 -> droidCardImage.setImageResource(R.drawable.c02)
+            3 -> droidCardImage.setImageResource(R.drawable.c03)
+            4 -> droidCardImage.setImageResource(R.drawable.c04)
+            5 -> droidCardImage.setImageResource(R.drawable.c05)
+            6 -> droidCardImage.setImageResource(R.drawable.c06)
+            7 -> droidCardImage.setImageResource(R.drawable.c07)
+            8 -> droidCardImage.setImageResource(R.drawable.c08)
+            9 -> droidCardImage.setImageResource(R.drawable.c09)
+            10 -> droidCardImage.setImageResource(R.drawable.c10)
+            11 -> droidCardImage.setImageResource(R.drawable.c11)
+            12 -> droidCardImage.setImageResource(R.drawable.c12)
+            13 -> droidCardImage.setImageResource(R.drawable.c13)
+        }
     }
 }
